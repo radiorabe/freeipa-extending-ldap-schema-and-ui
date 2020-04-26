@@ -41,7 +41,7 @@ objectClasses: ( 1.3.6.1.4.1.49213.1.2.1 NAME 'nextcloudUser'
 ```
 https://github.com/radiorabe/extending-freeipa/blob/master/src/nextcloud.ldif
 
-* ** important note: the ldif file has to end with a blank line ** *
+_** important note: the ldif file has to end with a blank line **_
 
 
 Extend the schema with the following command on the or a FreeIPA server:
