@@ -47,7 +47,7 @@ ___important note: the ldif file has to end with a blank line___
 
 
 ### cli plugin
-There are slight differences to the guide [Extending the FreeIPA Server](https://www.freeipa.org/images/5/5b/FreeIPA33-extending-freeipa.pdf), but it still works close enough this way. The main differences are the path to the plugins that has changed. The import path for 'user' has to be adjusted and all plugins have to be copied to ```<path to python lib>/ipaserver/plugins``` (e.g. ```/usr/lib/python2.7/site-packages/ipaserver/plugins```) instead of ```<path to python lib>/ipalib/plugins``` (e.g. ```/usr/lib/python2.7/site-packages/ipalib/plugins kopiert werden```).
+There are slight differences to the guide [Extending the FreeIPA Server](https://www.freeipa.org/images/5/5b/FreeIPA33-extending-freeipa.pdf), but it still works close enough this way. The main differences are the path to the plugins that has changed. The import path for 'user' has to be adjusted and all plugins have to be copied to ```<path to python lib>/ipaserver/plugins``` (e.g. ```/usr/lib/python2.7/site-packages/ipaserver/plugins```) instead of ```<path to python lib>/ipalib/plugins``` (e.g. ```/usr/lib/python2.7/site-packages/ipalib/plugins```).
 
 Plugin to enable user for having a nextcloud share
 ```py
@@ -233,7 +233,7 @@ ipa config-mod --addattr=ipaUserObjectClasses=nextcloudUser
 ```
 
 ### cli plugins
-Copy the plugin files to <path to python libs>/ipaserver/plugins and restart apache.
+Copy the plugin files to ```<path to python libs>/ipaserver/plugins``` and restart apache.
 ```
 cp usernc* /usr/lib/python2.7/site-packages/ipaserver/plugins/
 cd /usr/lib/python2.7/site-packages/ipaserver/plugins/
@@ -242,7 +242,7 @@ apachectl graceful
 ```
 
 ### web ui plugins
-Copy the plugin files to a subfolder with the same name as the file in <freeipa ui root>/js/plugins/ and restart apache.
+Copy the plugin files to a subfolder with the same name as the file in ```<freeipa ui root>/js/plugins/``` and restart apache.
 ```
 mkdir /usr/share/ipa/ui/js/plugins/{userncenabled,userncquota}
 cp userncenabled.js /usr/share/ipa/ui/js/plugins/userncenabled/
