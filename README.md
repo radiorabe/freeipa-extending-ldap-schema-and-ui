@@ -1,11 +1,11 @@
 # extending-freeipa
-An example to extend freeipa with custom attributes which can be configured through cli or web-ui.
+An example to extend freeipa with custom attributes which can be configured through cli or web ui.
 
 ## Introduction
 We needed this to integrate Owncloud/Nextcloud into FreeIPA. We wanted to be able to manage which user have Owncloud/Nextcloud shares and to set a quota individually. The latest documentation we found was for FreeiPA 3.3, [Extending FreeIPA](https://www.freeipa.org/images/5/5b/FreeIPA33-extending-freeipa.pdf). A lot has changed since then. This example here should work on FreeIPA 4 and later.
 
 ## How it works
-First you'll have to extend the LDAP schema and then add some plugins for cli and web-ui. We'll demonstrate by using the example for Owncloud/Nextcloud.
+First you'll have to extend the LDAP schema and then add some plugins for cli and web ui. We'll demonstrate by using the example for Owncloud/Nextcloud.
 
 ### Extending the schema
 We used the object classes and attributes already defined for Nextcloud ([nextcloud.schema](https://github.com/nextcloud/univention-app/blob/master/nextcloud.schema)). We slightly adjusted them to fit our needs.
@@ -140,3 +140,80 @@ def usermod_precallback(self, ldap, dn, entry, attrs_list,
 user.user_mod.register_pre_callback(usermod_precallback)
 ```
 
+### web ui plugin
+To have input fields, radio buttons, check boxes in the web ui we have to add plugins for this as well. The plugins are written in java script.
+
+
+Plugin to enable user for having a nextcloud share
+```js
+define([
+		'freeipa/phases',
+		'freeipa/user'],
+		function(phases, user_mod) {
+			
+// helper function
+function get_item(array, attr, value) {
+	for (var i=0,l=array.length; i<l; i++) {
+		if (array[i][attr] === value) 
+			return array[i];
+		}
+		return null;
+}
+
+var nc_enabled_plugin = {};
+
+// adds nextcloud enabled field into user account facet
+nc_enabled_plugin.add_nc_enabled_pre_op = function() {	
+	var facet = get_item(user_mod.entity_spec.facets, '$type', 'details');
+	var section = get_item(facet.sections, 'name', 'account');
+	section.fields.push({
+				$type: 'checkbox', 
+				name: 'nextcloudenabled', 
+				label: 'Nextcloud Share enabled',
+				flags: ['w_if_no_aci']
+	});
+	return true;	
+};
+
+phases.on('customization', nc_enabled_plugin.add_nc_enabled_pre_op);
+
+return nc_enabled_plugin;
+});
+```
+
+
+Plugin for setting a quota for a user
+```js
+define([
+		'freeipa/phases',
+		'freeipa/user'],
+		function(phases, user_mod) {
+			
+// helper function
+function get_item(array, attr, value) {
+	for (var i=0,l=array.length; i<l; i++) {
+		if (array[i][attr] === value) 
+			return array[i];
+		}
+		return null;
+}
+
+var nc_quota_plugin = {};
+
+// adds nextcloud quota field into user account facet
+nc_quota_plugin.add_nc_quota_pre_op = function() {	
+	var facet = get_item(user_mod.entity_spec.facets, '$type', 'details');
+	var section = get_item(facet.sections, 'name', 'account');
+	section.fields.push({
+				name: 'nextcloudquota', 
+				label: 'Nextcloud Share Quota',
+				flags: ['w_if_no_aci']
+	});
+	return true;	
+};
+
+phases.on('customization', nc_quota_plugin.add_nc_quota_pre_op);
+
+return nc_quota_plugin;
+});
+```
