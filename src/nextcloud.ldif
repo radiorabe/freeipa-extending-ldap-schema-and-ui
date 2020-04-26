@@ -24,6 +24,10 @@
 # 1.3.6.1.4.1.49213.1.1  AttributeTypes
 # 1.3.6.1.4.1.49213.1.2  ObjectClasses
 #--------------------------------------------------------------------------
+# Adjustments by $( 2020 ) Radio Bern RaBe, Simon Nussbaum <smirta@gmx.net>
+# - Removed MUST ( cn ), because with this it did not work. But is not
+#   a necessary condition for our case.
+# - stripped objectClass 'nextcloudGroup', because it's not needed here.
 
 # Attribute Types
 #-----------------
@@ -47,6 +51,4 @@ objectClasses: ( 1.3.6.1.4.1.49213.1.2.1 NAME 'nextcloudUser'
         SUP top AUXILIARY
         MAY ( nextcloudEnabled $ nextcloudQuota )
         )
-# - Removed MUST ( cn ), because with this it did not work. But is not
-#   a necessary condition for our case.
-# - stripped objectClass 'nextcloudGroup', because it's not needed here.
+
