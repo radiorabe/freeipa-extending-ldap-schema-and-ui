@@ -39,7 +39,7 @@ objectClasses: ( 1.3.6.1.4.1.49213.1.2.1 NAME 'nextcloudUser'
         )
 
 ```
-[nextcloud.ldif](blob/master/src/nextcloud.ldif)
+[nextcloud.ldif](src/nextcloud.ldif)
 
 
 ___important note: the ldif file has to end with a blank line___
@@ -49,17 +49,17 @@ ___important note: the ldif file has to end with a blank line___
 ### cli plugin
 There are slight differences to the guide [Extending the FreeIPA Server](https://www.freeipa.org/images/5/5b/FreeIPA33-extending-freeipa.pdf), but it still works close enough this way. The main differences are the path to the plugins that has changed. The import path for 'user' has to be adjusted and all plugins have to be copied to ```<path to python lib>/ipaserver/plugins``` (e.g. ```/usr/lib/python2.7/site-packages/ipaserver/plugins```) instead of ```<path to python lib>/ipalib/plugins``` (e.g. ```/usr/lib/python2.7/site-packages/ipalib/plugins```).
 
-Plugin to enable user for having a nextcloud share: [userncenabled.py](blob/master/src/userncenabled.py)
+Plugin to enable user for having a nextcloud share: [userncenabled.py](src/userncenabled.py)
 
-Plugin for setting a quota for a user: [userncquota.py](blob/master/src/userncquota.py)
+Plugin for setting a quota for a user: [userncquota.py](src/userncquota.py)
 
 ### web ui plugin
 To have input fields, radio buttons, check boxes in the web ui we have to add plugins for this as well. The plugins are written in java script.
 
 
-Plugin to enable user for having a nextcloud share: [userncenabled.js](blob/master/src/userncenabled.js)                       
+Plugin to enable user for having a nextcloud share: [userncenabled.js](src/userncenabled.js)                       
 
-Plugin for setting a quota for a user: [userncquota.js](blob/master/src/userncquota.js)
+Plugin for setting a quota for a user: [userncquota.js](src/userncquota.js)
 
 ## Installation
 Assuming having cloned this repo
