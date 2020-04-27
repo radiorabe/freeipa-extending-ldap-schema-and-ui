@@ -1,4 +1,4 @@
-# Extending FreeIPA LDAP schema and UI (By xample for Owncloud/Nextcloud)
+# Extending FreeIPA LDAP schema and UI (By example for Owncloud/Nextcloud)
 An example to extend freeipa with custom attributes which can be configured through cli or web ui by an example for Owncloud/Nextcloud.
 
 ## Introduction
