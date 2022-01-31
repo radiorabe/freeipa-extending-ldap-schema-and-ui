@@ -1,15 +1,20 @@
 # Extending FreeIPA LDAP schema and UI (By example for Owncloud/Nextcloud)
+
 An example to extend freeipa with custom attributes which can be configured through cli or web ui by an example for Owncloud/Nextcloud.
 
 ## Introduction
+
 We needed this to integrate Owncloud/Nextcloud into FreeIPA. We wanted to be able to manage which user have Owncloud/Nextcloud shares and to set a quota individually. The latest documentation we found was for FreeiPA 3.3, [Extending FreeIPA](https://www.freeipa.org/images/5/5b/FreeIPA33-extending-freeipa.pdf). A lot has changed since then. This example here should work on FreeIPA 4 and later.
 
 ## How it works
+
 First you'll have to extend the LDAP schema and then add some plugins for cli and web ui. We'll demonstrate by using the example for Owncloud/Nextcloud.
 
 ### Extending the schema
+
 We used the object classes and attributes already defined for Nextcloud ([nextcloud.schema](https://github.com/nextcloud/univention-app/blob/master/nextcloud.schema)). We slightly adjusted them to fit our needs.
-```
+
+```ldif
 # Adjustments by $( 2020 ) Radio Bern RaBe, Simon Nussbaum <smirta@gmx.net>
 # - Removed MUST ( cn ), because with this it did not work. But is not
 #   a necessary condition for our case.
@@ -39,67 +44,75 @@ objectClasses: ( 1.3.6.1.4.1.49213.1.2.1 NAME 'nextcloudUser'
         )
 
 ```
+
 [nextcloud.ldif](src/nextcloud.ldif)
 
-
-___important note: the ldif file has to end with a blank line___
-
-
+**_important note: the ldif file has to end with a blank line_**
 
 ### cli plugin
-There are slight differences to the guide [Extending the FreeIPA Server](https://www.freeipa.org/images/5/5b/FreeIPA33-extending-freeipa.pdf), but it still works close enough this way. The main differences are the path to the plugins that has changed. The import path for 'user' has to be adjusted and all plugins have to be copied to ```<path to python lib>/ipaserver/plugins``` (e.g. ```/usr/lib/python2.7/site-packages/ipaserver/plugins```) instead of ```<path to python lib>/ipalib/plugins``` (e.g. ```/usr/lib/python2.7/site-packages/ipalib/plugins```).
+
+There are slight differences to the guide [Extending the FreeIPA Server](https://www.freeipa.org/images/5/5b/FreeIPA33-extending-freeipa.pdf), but it still works close enough this way. The main differences are the path to the plugins that has changed. The import path for 'user' has to be adjusted and all plugins have to be copied to `<path to python lib>/ipaserver/plugins` (e.g. `/usr/lib/python2.7/site-packages/ipaserver/plugins`) instead of `<path to python lib>/ipalib/plugins` (e.g. `/usr/lib/python2.7/site-packages/ipalib/plugins`).
 
 Plugin to enable user for having a nextcloud share: [userncenabled.py](src/userncenabled.py)
 
 Plugin for setting a quota for a user: [userncquota.py](src/userncquota.py)
 
 ### web ui plugin
+
 To have input fields, radio buttons, check boxes in the web ui we have to add plugins for this as well. The plugins are written in java script.
 
-
-Plugin to enable user for having a nextcloud share: [userncenabled.js](src/userncenabled.js)                       
+Plugin to enable user for having a nextcloud share: [userncenabled.js](src/userncenabled.js)
 
 Plugin for setting a quota for a user: [userncquota.js](src/userncquota.js)
 
 ## Installation
+
 Assuming having cloned this repo
-```
+
+```bash
 git clone git@github.com:radiorabe/extending-freeipa.git
 cd extending-freeipa/src
-``` 
-### LDAP schema extension
-Extend the schema with the following command on the or a FreeIPA server:
 ```
+
+### LDAP schema extension
+
+Extend the schema with the following command on the or a FreeIPA server:
+
+```bash
 ldapadd -H ldap://$HOSTNAME -D 'cn=Directory Manager' -W -f nextcloud.ldif
 ```
 
-
 Check if schema was extended:
-```
+
+```bash
 ldapsearch -H ldap://$HOSTNAME -D 'cn=Directory Manager' -W -x -s base -b 'cn=schema' objectclasses | grep -i nextcloud
 ldapsearch -H ldap://$HOSTNAME -D 'cn=Directory Manager' -W -x -s base -b 'cn=schema' attributetypes | grep -i nextcloud
 ```
 
-
 Add the new object class to the ipa user object class:
-```
+
+```bash
 ipa config-mod --addattr=ipaUserObjectClasses=nextcloudUser
 ```
 
 ### cli plugins
-Copy the plugin files to ```<path to python libs>/ipaserver/plugins``` and restart apache.
-```
+
+Copy the plugin files to `<path to python libs>/ipaserver/plugins` and restart apache.
+
+```bash
 cp usernc* /usr/lib/python2.7/site-packages/ipaserver/plugins/
 cd /usr/lib/python2.7/site-packages/ipaserver/plugins/
 python -m compileall usernc* && python -O -m compileall usernc*
-apachectl graceful 
+apachectl graceful
 ```
 
 ### web ui plugins
-Copy the plugin files to a subfolder with the same name as the file in ```<freeipa ui root>/js/plugins/``` and restart apache.
-```
+
+Copy the plugin files to a subfolder with the same name as the file in `<freeipa ui root>/js/plugins/` and restart apache.
+
+```bash
 mkdir /usr/share/ipa/ui/js/plugins/{userncenabled,userncquota}
 cp userncenabled.js /usr/share/ipa/ui/js/plugins/userncenabled/
 cp userncquota.js /usr/share/ipa/ui/js/plugins/userncquota/
-apachectl graceful 
+apachectl graceful
 ```
