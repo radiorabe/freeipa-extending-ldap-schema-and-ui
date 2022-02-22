@@ -53,22 +53,21 @@ function get_item(array, attr, value) {
 		return null;
 }
 
-var nc_enabled_plugin = {};
+var nc_quota_plugin = {};
 
-// adds nextcloud enabled field into user account facet
-nc_enabled_plugin.add_nc_enabled_pre_op = function() {	
-	var facet = get_item(user_mod.entity_spec.facets, '$type', 'details');
-	var section = get_item(facet.sections, 'name', 'account');
-	section.fields.push({
-				$type: 'checkbox', 
-				name: 'nextcloudenabled', 
-				label: 'Nextcloud Share enabled',
-				flags: ['w_if_no_aci']
-	});
-	return true;	
+// adds nextcloud quota field into user account facet
+nc_quota_plugin.add_nc_quota_pre_op = function() {
+        var facet = get_item(user_mod.entity_spec.facets, '$type', 'details');
+        var section = get_item(facet.sections, 'name', 'account');
+        section.fields.push({
+                                name: 'nextcloudquota',
+                                label: 'Nextcloud Share Quota',
+                                flags: ['w_if_no_aci']
+        });
+        return true;
 };
 
-phases.on('customization', nc_enabled_plugin.add_nc_enabled_pre_op);
+phases.on('customization', nc_quota_plugin.add_nc_quota_pre_op);
 
-return nc_enabled_plugin;
+return nc_quota_plugin;
 });
