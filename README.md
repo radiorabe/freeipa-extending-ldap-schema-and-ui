@@ -2,6 +2,8 @@
 
 An example to extend freeipa with custom attributes which can be configured through cli or web ui by an example for Owncloud/Nextcloud.
 
+![Screenshot of ui components on user page.](docs/screenshot.png)
+
 ## Introduction
 
 We needed this to integrate Owncloud/Nextcloud into FreeIPA. We wanted to be able to manage which user have Owncloud/Nextcloud shares and to set a quota individually. The latest documentation we found was for FreeiPA 3.3, [Extending FreeIPA](https://www.freeipa.org/images/5/5b/FreeIPA33-extending-freeipa.pdf). A lot has changed since then. This example here should work on FreeIPA 4 and later.
