@@ -1,0 +1,12 @@
+# /etc/systemd/system/populate_group_shares.service
+[Unit]
+Description=Create/Sync shares for nextcloud/owncloud enabled LDAP groups to owncloud
+
+[Service]
+Environment="REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-bundle.crt"
+Environment="IPA_SERVER=ipa.test.lab"
+Environment="NC_FEDERATED_SERVER=nextcloud.test.lab"
+ExecStart=/usr/bin/python /usr/libexec/populate_group_shares/populate_group_shares.py
+
+[Install]
+WantedBy=basic.target

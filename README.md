@@ -67,12 +67,20 @@ Plugin to enable user for having a nextcloud share: [userncenabled.js](src/usern
 
 Plugin for setting a quota for a user: [userncquota.js](src/userncquota.js)
 
-## Installation
+### Tools: populating group shares
 
-Assuming having cloned this repo
+The `tools/populate_group_shares.py` script uses `IPA_SERVER` to select the FreeIPA server and `NC_FEDERATED_SERVER` for the remote Nextcloud/ownCloud server used by federated shares. The scripts needs two files `creds.py` and `ldapcreds.py` containing Nextcloud/ownCloud and LDAP credentials at `/etc/populate_group_shares`.
 
 ```bash
-git clone git@github.com:radiorabe/extending-freeipa.git
+IPA_SERVER=ipa.example.com NC_FEDERATED_SERVER=nextcloud.example.com python tools/populate_group_shares.py
+```
+
+## Installation
+
+Clone this repo
+
+```bash
+git clone git@github.com:radiorabe/freeipa-extending-ldap-schema-and-ui.git
 cd extending-freeipa/src
 ```
 
