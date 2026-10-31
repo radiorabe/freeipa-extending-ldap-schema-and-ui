@@ -1,0 +1,10 @@
+[Unit]
+Description=Create/Sync shares for nextcloud enabled LDAP groups to nextcloud/owncloud every 5 minutes
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+Unit=populate_group_shares.service
+
+[Install]
+WantedBy=timers.target
